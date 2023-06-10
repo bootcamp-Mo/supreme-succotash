@@ -1,8 +1,8 @@
 require('dotenv').config();
 
 const inquirer = require('inquirer');
-const cTable = require('console.table');
 const mysql = require('mysql2');
+const queries = require('./queries')
 
 const db = mysql.createConnection({
 	host: process.env.DB_HOST,
@@ -76,9 +76,7 @@ const seeking = () => {
 };
 
 const viewAllEmployees = () => {
-	const query =
-		'SELECT * FROM employees JOIN roles ON employees.role_id = roles.id;';
-	db.query(query, function (err, rows) {
+	db.query('SELECT * FROM employees JOIN roles ON employees.role_id = roles.id;', function (err, rows) {
 		if (err) {
 			console.log('An error occurred while retrieving employees', err);
 		} else {
@@ -89,8 +87,8 @@ const viewAllEmployees = () => {
 };
 
 const viewAllDepartments = () => {
-	const query = 'SELECT * FROM departments;';
-	db.query(query, function (err, rows) {
+
+	db.query('SELECT * FROM departments;', function (err, rows) {
 		if (err) {
 			console.log('An error occurred while retrieving departments', err);
 		} else {
@@ -101,8 +99,7 @@ const viewAllDepartments = () => {
 };
 
 const viewAllRoles = () => {
-	const query = 'SELECT * FROM roles;';
-	db.query(query, function (err, rows) {
+	db.query('SELECT * FROM roles;', function (err, rows) {
 		if (err) {
 			console.log('An error occurred while retrieving roles', err);
 		} else {
@@ -137,20 +134,18 @@ const addEmployee = () => {
 			},
 		])
 		.then((answers) => {
-			const query =
-				'INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)';
 			const values = [
 				answers.first_name,
 				answers.last_name,
 				answers.role_id,
 				answers.manager_id,
 			];
-			db.query(query, values, function (err, result) {
+			db.query('INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)', values, function (err, result) {
 				if (err) {
 					console.log('An error occurred while adding employee', err);
 				} else {
 					console.log('New employee added successfully');
-					console.log(result);
+					console.table(result);
 				}
 				seeking();
 			});
@@ -167,14 +162,13 @@ const addDepartment = () => {
 			},
 		])
 		.then((answers) => {
-			const query = 'INSERT INTO departments (name) VALUES (?)';
 			const values = [answers.name];
-			db.query(query, values, function (err, result) {
+			db.query('INSERT INTO departments (name) VALUES (?)', values, function (err, result) {
 				if (err) {
 					console.log('An error occurred while adding department', err);
 				} else {
 					console.log('New department added successfully');
-					console.log(result);
+					console.table(result);
 				}
 				seeking();
 			});
@@ -201,19 +195,17 @@ const addRole = () => {
 			},
 		])
 		.then((answers) => {
-			const query =
-				'INSERT INTO roles (title, salary, department_id) VALUES (?, ?, ?)';
 			const values = [
 				answers.title,
 				answers.salary,
 				answers.department_id,
 			];
-			db.query(query, values, function (err, result) {
+			db.query('INSERT INTO roles (title, salary, department_id) VALUES (?, ?, ?)', values, function (err, result) {
 				if (err) {
 					console.log('An error occurred while adding role', err);
 				} else {
 					console.log('New role added successfully');
-					console.log(result);
+					console.table(result);
 				}
 				seeking();
 			});
@@ -235,14 +227,13 @@ const updateEmployee = () => {
 			},
 		])
 		.then((answers) => {
-			const query = 'UPDATE employees SET role_id = ? WHERE id = ?';
 			const values = [answers.role_id, answers.employee_id];
-			db.query(query, values, function (err, result) {
+			db.query('UPDATE employees SET role_id = ? WHERE id = ?', values, function (err, result) {
 				if (err) {
 					console.log('An error occurred while updating employee role', err);
 				} else {
 					console.log('Employee role updated successfully');
-					console.log(result);
+					console.table(result);
 				}
 				seeking();
 			});
@@ -259,14 +250,13 @@ const deleteEmployee = () => {
 			},
 		])
 		.then((answers) => {
-			const query = 'DELETE FROM employees WHERE id = ?';
 			const values = [answers.employee_id];
-			db.query(query, values, function (err, result) {
+			db.query('DELETE FROM employees WHERE id = ?', values, function (err, result) {
 				if (err) {
 					console.log('An error occurred while deleting an employee', err);
 				} else {
 					console.log('Employee role deleted successfully');
-					console.log(result);
+					console.table(result);
 				}
 				seeking();
 			});
