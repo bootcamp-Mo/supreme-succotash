@@ -36,3 +36,6 @@ Questions? Feel free to reach out through the following channels:
 - Email: email 
 
     
+
+[walkthrough](https://github.com/bootcamp-Mo/supreme-succotash/assets/122568039/42d51381-f525-4f5e-bec3-0b9dbd42c846)
+
